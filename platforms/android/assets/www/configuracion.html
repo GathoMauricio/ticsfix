@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!--
+       <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *">
+   -->
+    <meta charset="UTF-8"/>
+    <meta http-equiv="Content-Security-Policy" content=" media-src *">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="msapplication-tap-highlight" content="no">
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+    <link rel="stylesheet" type="text/css" href="jquery/jquery.mobile.custom.theme.min.css">
+    <link rel="stylesheet" type="text/css" href="jquery/jquery.mobile.custom.structure.min.css">
+    <link rel="stylesheet" type="text/css" href="css/font.css">
+    <link rel="stylesheet" type="text/css" href="css/index.css">
+    <link rel="stylesheet" type="text/css" href="dist/sweetalert.css">
+    <link rel="stylesheet" type="text/css" href="themes/twitter/twitter.css">
+
+    <script type="text/javascript" src="js/Toast.js"></script>
+    <script type="text/javascript" src="dist/sweetalert.min.js"></script>
+    <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+    <script type="text/javascript" src="cordova.js"></script>
+    <script type="text/javascript" src="jquery/jquery.js"></script>
+    <script type="text/javascript" src="jquery/jquery.mobile.custom.min.js"></script>
+    <script type="text/javascript" src="js/index.js"></script>
+    <title>TICS FIXI</title>
+    <script type="text/javascript" >
+        var map;
+        $(document).ready(function(){
+
+            $.post("http://dotredes.dyndns.biz/ticsfix/control/select_cliente.php",{ id_cliente:window.localStorage.getItem("id_cliente")},function(data){
+            var json=$.parseJSON(data);
+
+            $("#nombre_cliente").prop('value',json.nombre_cliente);
+            $("#email").prop('value',json.email);
+            $("#telefono").prop('value',json.telefono);
+            $("#direccion").prop('value',json.direccion);
+
+            if(json.lat<=0){
+                 navigator.geolocation.getCurrentPosition(getLocation,function(e){
+                 alert("ocurrió un error al tratar de obtener su geolocalización.\nVerifique que el GPS está encendido.");
+                 },{ maximumAge: 3000, timeout: 5000, enableHighAccuracy: true });
+            }else{
+            var map;
+                var punto = new google.maps.LatLng(json.lat,json.lon);
+                   var myOptions = {
+                     zoom: 18, //nivel de zoom para poder ver de cerca.
+                     center: punto,
+                     mapTypeId: google.maps.MapTypeId.ROADMAP
+                   }
+                map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+
+                var marcador = new google.maps.Marker({
+                  position:punto,
+                  map:map,
+                  animation:google.maps.Animation.DROP,
+                  draggable:false
+                 });
+
+                 map.addListener('click', function(e) {
+                     marcador.setPosition(e.latLng);
+                     $.post("http://dotredes.dyndns.biz:/ticsfix/control/update_location.php",{
+                        id_cliente:window.localStorage.getItem("id_cliente"),
+                        lat:marcador.getPosition().lat(),
+                        lon:marcador.getPosition().lng()
+                     },function(data){
+                     //Aqui va el toast
+                       window.plugins.toast.show('Pocisión actualizada', 'long', 'center',
+                       function(a){console.log('toast success: ' + a)},
+                       function(b){alert('toast error: ' + b)});
+                     });
+                  });
+            }
+            });
+        });
+
+    </script>
+</head>
+<body>
+<div data-role="page" class="body">
+    <div data-role="header" class="header" data-position="fixed" id="cabecera">
+        <a href="#panel" id="abre_panel" class="panel-btn"></a>
+        <h1>TICS FIX</h1>
+    </div>
+
+    <div data-role="panel" id="panel" data-position-fixed="true" data-position="left" data-display="overlay">
+        <ul data-role="listview" class="lista_menu">
+            <li data-icon="false" id="li_facebook">
+                <a href="#" onclick="conectar();" class="panel_li"  id="a_facebook" style="padding:10px;color:#3B5998;"><span class="icon-facebook" ></span>Iniciar sesión</a>
+            </li>
+            <li data-icon="false" class="panel_li"  id="li_config">
+
+            </li>
+        </ul>
+    </div>
+
+    <div data-role="content">
+        <center><h1>CONFIGURACIÓN</h1></center>
+        <hr/>
+        <p onclick="inicio();" style="padding:10px;">
+            <b>
+                <span class="icon-arrow-left" style="padding:10px;background-color:#0080FF;color:white;border-radius:50px;"></span>
+                &nbsp;&nbsp;ATRAS
+            </b>
+        </p>
+        <hr/>
+       <center>
+           <h3 >Nombre completo</h3>
+           <input type="text" id="nombre_cliente" placeholder="Escriba su nombre..."/>
+           <h3 >Email</h3>
+           <input type="email" id="email" placeholder="Escriba su email..." readonly/>
+           <h3 >Teléfono</h3>
+           <input type="number" id="telefono" placeholder="Escriba su teléfono..."/>
+           <h3 >Seleccione su entidado</h3>
+           <select  id="entidad">
+               <option value="DF">CD. MEXICO</option>
+           </select>
+           <h3 >Dirección completa</h3>
+           <textarea type="text" id="direccion" placeholder="Escriba su direccion..."></textarea>
+           <h5>Ubique su geolocalización.
+           Toque sobre el mapa para cambiar la pocisión del marcador
+           o presione el botón</h5>
+           <button onclick="navigator.geolocation.getCurrentPosition(getLocation,function(e){
+                 alert('ocurrió un error al tratar de obtener su geolocalización.\nVerifique que el GPS está encendido.');
+           },{ maximumAge: 3000, timeout: 5000, enableHighAccuracy: true });"> <span class="icon-target"></span> Obtener mi pocisión</button>
+           <br/>
+           <div id="map_canvas"></div>
+           <br/><br/>
+           <button onclick="actualizarDatos();">Actualizar mis datos</button>
+           <br/><br/>
+           <a href="#" onclick="desconectar();" style="color:red">Cerrar sesión</a>
+       </center>
+    </div>
+
+</div>
+</body>
+</html>

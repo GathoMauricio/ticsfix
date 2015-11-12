@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!--
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *">
+    -->
+    <meta charset="UTF-8"/>
+    <meta http-equiv="Content-Security-Policy" content=" media-src *">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="msapplication-tap-highlight" content="no">
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+    <link rel="stylesheet" type="text/css" href="jquery/jquery.mobile.custom.theme.min.css">
+    <link rel="stylesheet" type="text/css" href="jquery/jquery.mobile.custom.structure.min.css">
+    <link rel="stylesheet" type="text/css" href="css/font.css">
+    <link rel="stylesheet" type="text/css" href="css/index.css">
+    <link rel="stylesheet" type="text/css" href="dist/sweetalert.css">
+    <link rel="stylesheet" type="text/css" href="themes/twitter/twitter.css">
+
+    <script type="text/javascript" src="dist/sweetalert.min.js"></script>
+    <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+    <script type="text/javascript" src="cordova.js"></script>
+    <script type="text/javascript" src="jquery/jquery.js"></script>
+    <script type="text/javascript" src="js/pusher.js"></script>
+    <script type="text/javascript" src="jquery/jquery.mobile.custom.min.js"></script>
+    <script type="text/javascript" src="js/index.js"></script>
+    <title>TICS FIX</title>
+</head>
+<body>
+<div data-role="page" class="body">
+    <div data-role="header" class="header" data-position="fixed" id="cabecera">
+        <a href="#panel" id="abre_panel" class="panel-btn"></a>
+        <h1>TICS FIX</h1>
+    </div>
+
+    <div data-role="panel" id="panel" data-position-fixed="true" data-position="left" data-display="overlay">
+        <ul data-role="listview" class="lista_menu">
+            <li data-icon="false" id="li_facebook">
+                <a href="#" onclick="conectar();" class="panel_li"  id="a_facebook" style="padding:10px;color:#3B5998;"><span class="icon-facebook" ></span>Iniciar sesión</a>
+            </li>
+            <li data-icon="false" class="panel_li"  id="li_config">
+
+            </li>
+        </ul>
+    </div>
+
+    <div data-role="content">
+        <center><h1>CONTACTO</h1></center>
+        <hr/>
+        <p onclick="inicio();" style="padding:10px;">
+            <b>
+                <span class="icon-arrow-left" style="padding:10px;background-color:#0080FF;color:white;border-radius:50px;"></span>
+                &nbsp;&nbsp;ATRAS
+            </b>
+        </p>
+        <hr/>
+        <br/>
+        <input type="email" id="email_contacto" placeholder="Email..."/><br/>
+        <input type="text" id="asunto_contacto" placeholder="Asunto..."/><br/>
+        <textarea id="texto_contacto" id="" cols="60" rows="10" placeholder="Escriba aquí su mensaje..."></textarea><br/>
+        <button onclick="enviar();">Enviar</button>
+        <hr/>
+        <script type="text/javascript">
+            function enviar(){
+                var email=$("#email_contacto").prop('value');
+                var asunto=$("#asunto_contacto").prop('value');
+                var texto=$("#texto_contacto").prop('value');
+                if(email.length <= 0 || asunto.length <= 0 || texto.length <= 0){
+                    toast('Todos los campos son obligatorios');
+                }else{
+                    if(hayConexion()){
+                    toast('Enviando...');
+                    $.post('http://dotredes.dyndns.biz:/ticsfix/control/contacto.php',{
+                        email:email,
+                        asunto:asunto,
+                        texto:texto
+                    },function(data){
+                        toast('Mensaje enviado...');
+                    });
+                    }
+                }
+            }
+        </script>
+        <br/>
+        <center>
+        <span class="icon-phone"><a href="tel:+525555460615"> +52 55 55460615 Ext.109</a></span><br/><br/>
+        <span class="icon-envelop"><a href="mailto:contacto@tics.pro"> contacto@tics.pro</a></span><br/><br/>
+        <span class="icon-location2"> Bahía Palmas 33, Verónica Anzúres, 11300 Ciudad de México, D.F., México</span><br/><br/>
+        </center>
+    </div>
+</div>
+</body>
+</html>

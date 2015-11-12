@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!--
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *">
+    -->
+    <meta charset="UTF-8"/>
+    <meta http-equiv="Content-Security-Policy" content=" media-src *">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="msapplication-tap-highlight" content="no">
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+    <link rel="stylesheet" type="text/css" href="jquery/jquery.mobile.custom.theme.min.css">
+    <link rel="stylesheet" type="text/css" href="jquery/jquery.mobile.custom.structure.min.css">
+    <link rel="stylesheet" type="text/css" href="css/font.css">
+    <link rel="stylesheet" type="text/css" href="css/index.css">
+    <link rel="stylesheet" type="text/css" href="dist/sweetalert.css">
+    <link rel="stylesheet" type="text/css" href="themes/twitter/twitter.css">
+
+    <script type="text/javascript" src="dist/sweetalert.min.js"></script>
+    <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+    <script type="text/javascript" src="cordova.js"></script>
+    <script type="text/javascript" src="jquery/jquery.js"></script>
+    <script type="text/javascript" src="jquery/jquery.mobile.custom.min.js"></script>
+    <script type="text/javascript" src="js/index.js"></script>
+    <script type="text/javascript" src="js/paypal-mobile-js-helper.js"></script>
+    <title>TICS FIX</title>
+</head>
+<body>
+<div data-role="page" class="body">
+    <div data-role="header" class="header" data-position="fixed" id="cabecera">
+        <a href="#panel" id="abre_panel" class="panel-btn"></a>
+        <h1>TICS FIX</h1>
+    </div>
+
+    <div data-role="panel" id="panel" data-position-fixed="true" data-position="left" data-display="overlay">
+        <ul data-role="listview" class="lista_menu">
+            <li data-icon="false" id="li_facebook">
+                <a href="#" onclick="conectar();" class="panel_li"  id="a_facebook" style="padding:10px;color:#3B5998;"><span class="icon-facebook" ></span>Iniciar sesión</a>
+            </li>
+            <li data-icon="false">
+                <a href="#" class="panel_li" onclick="inicio();"><span class="icon-home"></span> Inicio</a>
+            </li>
+            <li data-icon="false">
+                <a href="#" class="panel_li" onclick="servicios();"><span class="icon-terminal"></span> Nuestros servicios</a>
+            </li>
+            <li data-icon="false">
+                <a href="#" class="panel_li" onclick="productos();"><span class="icon-cart"></span> Productos</a>
+            </li>
+
+            <li data-icon="false">
+                <a href="#" class="panel_li" onclick="contacto();"><span class="icon-envelop"></span> Contacto</a>
+            </li>
+            <li data-icon="false">
+                <a href="#" class="panel_li" onclick="acerca();"><span class="icon-info"></span> Acerca de</a>
+            </li>
+            <li data-icon="false" class="panel_li" id="li_historial">
+
+            </li>
+            <li data-icon="false" class="panel_li"  id="li_compartir">
+
+            </li>
+            <li data-icon="false" class="panel_li"  id="li_config">
+
+            </li>
+        </ul>
+    </div>
+
+    <div data-role="content">
+        <center> <h2 style="color:white">Productos</h2> </center>
+        <div id="contenedor_productos">
+        </div>
+    </div>
+    <img src="img/distribuidormac.png" alt="mac" width="100%"/>
+    <br/><br/>
+    <img src="img/marcas.png" alt="marcas" width="100%"/>
+</div>
+</body>
+</html>
